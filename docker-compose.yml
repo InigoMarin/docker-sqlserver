@@ -1,0 +1,29 @@
+version: "3.9"
+
+networks:
+  app-network-public:
+    driver: bridge
+
+volumes:
+  sql-server-data:
+    driver: local
+  sqldata:
+  sqllog:
+  sqlbackup:
+
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: db-sqlserver
+    networks:
+      - app-network-public
+    restart: always
+    environment:
+      MSSQL_AGENT_ENABLED: true
+    env_file:
+      - sqlserver.env
+      - sapassword.env
+    ports:
+      - "1433:1433"
+    volumes:
+      - ./data:/var/opt/mssql/
